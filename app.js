@@ -10,7 +10,7 @@ const port = process.env.PORT || 8000;
 const cors = require("cors");
 const io=require('socket.io')(8080,{
   cors:{
-    origin:'http://localhost:5173'
+    origin:'https://mellow-chimera-cd179a.netlify.app'
   }
 });
 
