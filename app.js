@@ -3,16 +3,40 @@ const cloudConnection = require("./db/connection");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const app = express();
+
+const http = require("http");
+
 const Users = require("./models/Users");
 const Conversation = require("./models/Conversation");
 const Messages = require("./models/Messages");
 const port = process.env.PORT || 8000;
 const cors = require("cors");
-const io=require('socket.io')(8080,{
+
+const {Server}=require("socket.io")
+const server=http.createServer(app);
+
+// const io=new Server(server,{
+//     cors:{
+//         origin:"http://localhost:5173", 
+//         method:["GET","POST"],
+//     }
+// })
+// app.use(cors({
+//   origin:"http://localhost:5173",
+//   credentials:true,
+// }))
+
+const io=new Server(server,{
   cors:{
-    origin:'https://mellow-chimera-cd179a.netlify.app'
+      origin:"https://mellow-chimera-cd179a.netlify.app", 
+      method:["GET","POST"],
   }
-});
+})
+app.use(cors({
+  origin:"https://mellow-chimera-cd179a.netlify.app",
+  credentials:true,
+}))
+
 
 //Database connection
 cloudConnection();
@@ -260,6 +284,6 @@ app.get("/api/users/:userId", async (req, res) => {
   } catch (error) {}
 });
 
-app.listen(port, () => {
-  console.log("listeing on port " + port);
-});
+server.listen(port,()=>{
+  console.log("App is running on port "+port);
+})
